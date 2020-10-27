@@ -27,7 +27,6 @@
           <a-breadcrumb-item>App</a-breadcrumb-item>
         </a-breadcrumb>
         <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
-          <!-- <HelloWorld></HelloWorld> -->
           <List></List>
         </div>
       </a-layout-content>
@@ -39,12 +38,10 @@
 </template>
 <script>
 import zhCN from 'ant-design-vue/es/locale/zh_CN'
-import HelloWorld from './components/HelloWorld.vue'
 import List from './components/List.vue'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     List
   },
   data() {

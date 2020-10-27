@@ -8,6 +8,7 @@ import app from '../app';
 import debug from 'debug';
 debug('ts-node:server');
 import http from 'http';
+import os from 'os'
 
 /**
  * Get port from environment and store in Express.
@@ -68,11 +69,9 @@ function onError(error: any) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
       process.exit(1);
-      break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use');
       process.exit(1);
-      break;
     default:
       throw error;
   }
@@ -88,4 +87,24 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr!.port;
   debug('Listening on ' + bind);
+  console.log(`  Dev server running at:`)
+  const hostname = 'localhost'
+  const protocol = 'https'
+  const interfaces = os.networkInterfaces()
+  Object.keys(interfaces).forEach((key) => {
+    ;(interfaces[key] || [])
+      .filter((details) => details.family === 'IPv4')
+      .map((detail) => {
+        return {
+          type: detail.address.includes('127.0.0.1')
+            ? 'Local:   '
+            : 'Network: ',
+          host: detail.address.replace('127.0.0.1', hostname)
+        }
+      })
+      .forEach(({ type, host }) => {
+        const url = `${protocol}://${host}:${port}/`
+        console.log(`  > ${type} ${url}`)
+      })
+  })
 }
