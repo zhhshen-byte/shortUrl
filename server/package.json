@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./dist/bin/server.js",
     "start:dev": "ts-node ./bin/server.ts",
+    "watch": "nodemon",
     "build-ts": "tsc",
     "copy-static": "ts-node copyStatic.ts",
     "build": "npm run build-ts && npm run copy-static"

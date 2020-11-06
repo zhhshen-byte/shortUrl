@@ -9,9 +9,9 @@ const query = (sql: string) => {
             if (error) {
                 reject(error);
             } else {
-                connection.query(sql, (error, results) => {
-                    if (error) {
-                        reject(error);
+                connection.query(sql, (err, results) => {
+                    if (err) {
+                        reject(err);
                     } else {
                         resolve(results);
                     }

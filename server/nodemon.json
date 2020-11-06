@@ -1,0 +1,6 @@
+{
+  "ignore": [ "dist" ],
+  "watch": [],
+  "ext": "js json ejs ts",
+  "exec": "npm run start:dev"
+}

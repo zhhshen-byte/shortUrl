@@ -8,7 +8,7 @@ router.get('/:id', async function(req, res, next) {
   try {
     let result = await query(sql)
     console.log('result', result[0].url)
-    res.redirect(301, result[0].url)
+    res.redirect(302, result[0].url)
   } catch (e) {
     res.send(e.toString())
   }

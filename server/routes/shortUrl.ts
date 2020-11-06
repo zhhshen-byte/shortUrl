@@ -70,30 +70,54 @@ function EncodeStr(number: number) {
 }
 
 
-let queryAllSQL = `SELECT * FROM links`
 
-router.get('/getLinks', async (req, res) => {
-    let { keyword } = req.query
-    if (keyword) {
-      queryAllSQL += `WHERR links.keyword=${keyword}`;
-    }
-    let sql = `${queryAllSQL} ORDER BY links.id DESC`;
-    try {
-        let result = await query(sql);
-        result.forEach((i: any) => {
-            i.key = i.id,
-            i['update_at'] = dayjs(i['update_at']).format('YYYY-MM-DD HH:mm:ss')
-        })
-        res.json({
-            flag: 0,
-            data: result
-        })
-    } catch (e) {
-        res.json({
-            flag: 1,
-            msg: e.toString()
-        })
-    }
+let queryCount = 'SELECT COUNT(*) AS total FROM links'
+let queryList = 'SELECT * FROM links'
+
+router.post('/getLinks', async (req, res) => {
+  let { keyword, pageSize, pageNum } = req.body
+  if (keyword) {
+    queryList += `WHERR links.keyword=${keyword}`
+  }
+  let sql = ` ${queryList} ORDER BY links.id DESC`
+  if (!pageSize) {
+    res.json({
+      flag: 1,
+      msg: 'papesize 不能为空'
+    })
+    return
+  }
+  let start = (pageNum - 1) * pageSize
+  sql += ` limit ${start},${pageSize};`
+  console.log('sql', sql)
+  try {
+    let countResult = await query(queryCount)
+    let listResult = await query(sql)
+      let allCount = countResult[0].total
+      console.log(allCount)
+      let allPage = Math.ceil(parseInt(allCount) / pageSize)
+      let list = listResult || []
+      list.forEach((i: any) => {
+          i.key = i.id
+          i['update_at'] = dayjs(i['update_at']).format('YYYY-MM-DD HH:mm:ss')
+      })
+      res.json({
+          flag: 0,
+          data: {
+            total: allCount,
+            totalPage: allPage,
+            pageSize: pageSize || 10,
+            pageNum: pageNum || 1,
+            list: list
+          }
+      })
+  } catch (e) {
+    console.log(e.toString())
+    res.json({
+      flag: 1,
+      msg: e.toString()
+    })
+  }
 });
 
 
@@ -141,13 +165,14 @@ router.post('/create', urlencodedParser, async (req, res) => {
     }
 });
 
-router.post('/delete', async (req, res) => {
+router.post('/deleteLink', async (req, res) => {
     let { id } = req.body;
     let sql = `DELETE FROM links WHERE id=${id}`;
     try {
-        let result = await query(sql);
+        await query(sql);
         res.json({
-          flag: 0
+          flag: 0,
+          msg: '删除成功！'
         })
     } catch (e) {
         res.json({
@@ -156,28 +181,5 @@ router.post('/delete', async (req, res) => {
         })
     }
 });
-
-// router.post('/updateEmployee', async (req, res) => {
-//     let { id, name, departmentId, hiredate, levelId } = req.body;
-//     let sql = `UPDATE employee
-//         SET
-//             name='${name}',
-//             departmentId=${departmentId},
-//             hiredate='${hiredate}',
-//             levelId=${levelId}
-//         WHERE
-//             id=${id}`;
-//     try {
-//         let result = await query(sql);
-//         res.json({
-//             flag: 0
-//         })
-//     } catch (e) {
-//         res.json({
-//             flag: 1,
-//             msg: e.toString()
-//         })
-//     }
-// });
 
 export default router;

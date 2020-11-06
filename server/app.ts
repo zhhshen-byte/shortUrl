@@ -7,7 +7,6 @@ import logger from 'morgan';
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
-import employeeRouter from './routes/employee';
 import shortUrlRouter from './routes/shortUrl';
 
 let app = express();
@@ -31,7 +30,7 @@ app.all('*', (req, res, next) => {
   res.header("Content-Type", "application/json;charset=utf-8");
   console.log('req', req.method)
   if (req.method.toLowerCase() == 'options') {
-    res.send(200)
+    res.sendStatus(200)
   } else {
     next()
   }
@@ -39,7 +38,6 @@ app.all('*', (req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api/employee', employeeRouter);
 app.use('/api/shortUrl', shortUrlRouter);
 
 

@@ -10,13 +10,13 @@
           :style="{ lineHeight: '64px' }"
         >
           <a-menu-item key="1">
-            nav 1
+            导航 1
           </a-menu-item>
           <a-menu-item key="2">
-            nav 2
+            导航 2
           </a-menu-item>
           <a-menu-item key="3">
-            nav 3
+            导航 3
           </a-menu-item>
         </a-menu>
       </a-layout-header>
